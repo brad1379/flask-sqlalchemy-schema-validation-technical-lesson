@@ -16,5 +16,18 @@ user_data = [
 ]
 
 # validate and deserialize the data
+try:
+    UserSchema(many=True).load(user_data)  #raises ValidationError
+except ValidationError as err:
+    print("Valid data:")
+    pprint(err.valid_data)
+    # [{'age': 30, 'email': 'ariel@example.com', 'name': 'Ariel'},
+    # {'age': 42},
+    # {'email': 'ariel@example.com', 'name': 'Sasha'},
+    # {'age': 88, 'name': 'Cruz'}]
 
-UserSchema(many=True).load(user_data)  #raises ValidationError
+    print("Invalid data:")
+    pprint(err.messages)
+    # {1: {'email': ['Not a valid email address.'], 'name': ['Not a valid string.']},
+    # 2: {'age': ['Not a valid integer.']},
+    # 3: {'email': ['Not a valid email address.']}}
